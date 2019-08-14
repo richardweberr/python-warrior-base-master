@@ -18,10 +18,10 @@ class Hero(BaseClassForNameAndImage):
             raise HeroTypeNotAllowedException()
         super().__init__(name, image)
         # prefix life with _ to make the attribute 'private'
-        self._life = life
+        # self._life = life
         # now the constructor uses the setter conditions too
         self.life = life
-        self._attack_level = attack_level
+        # self._attack_level = attack_level
         self.attack_level = attack_level
 
     @classmethod
@@ -65,11 +65,13 @@ class Hero(BaseClassForNameAndImage):
                 self._attack_level = self.WIZARD_MAX_ATTACK_LEVEL
             else:
                 self._attack_level = new_value
-        if self.current_type == 'Warrior':
+        elif self.current_type == 'Warrior':
             if new_value >= self.WARRIOR_MAX_ATTACK_LEVEL:
                 self._attack_level = self.WARRIOR_MAX_ATTACK_LEVEL
             else:
                 self._attack_level = new_value
+        else:
+            self._attack_level = new_value
 
     def can_use_modifier(self, case):
         if (case.current_type == 'potion') or (case.current_type == 'spell' and self.current_type == 'Wizard') or (case.current_type == 'weapon' and self.current_type == 'Warrior'):
