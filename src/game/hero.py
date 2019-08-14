@@ -30,37 +30,38 @@ class Hero(BaseClassForNameAndImage):
     def life(self):
         return self._life
 
+    # setter defined here
     @life.setter
-    def life(self, mod):
+    def life(self, new_value):
         if self.current_type == 'Wizard':
-            if self._life + mod < self.WIZARD_MAX_LIFE:
-                self._life += mod
-            else:
+            if new_value >= self.WIZARD_MAX_LIFE:
                 self._life = self.WIZARD_MAX_LIFE
+            else:
+                self._life = new_value
 
         if self.current_type == 'Warrior':
-            if self._life + mod < self.WARRIOR_MAX_LIFE:
-                self._life += mod
-            else:
+            if new_value >= self.WARRIOR_MAX_LIFE:
                 self._life = self.WARRIOR_MAX_LIFE
+            else:
+                self._life = new_value
 
     @property
     def attack_level(self):
         return self._attack_level
 
     @attack_level.setter
-    def attack_level(self, mod):
+    def attack_level(self, new_value):
         if self.current_type == 'Wizard':
-            if self._attack_level + mod < self.WIZARD_MAX_ATTACK_LEVEL:
-                self._attack_level += mod
-            else:
+            if new_value >= self.WIZARD_MAX_ATTACK_LEVEL:
                 self._attack_level = self.WIZARD_MAX_ATTACK_LEVEL
+            else:
+                self._attack_level = new_value
 
         if self.current_type == 'Warrior':
-            if self._attack_level + mod < self.WARRIOR_MAX_ATTACK_LEVEL:
-                self._attack_level += mod
-            else:
+            if new_value >= self.WARRIOR_MAX_ATTACK_LEVEL:
                 self._attack_level = self.WARRIOR_MAX_ATTACK_LEVEL
+            else:
+                self._attack_level = new_value
 
     def use_modifier(self, case):
         if case.current_type == 'potion':
