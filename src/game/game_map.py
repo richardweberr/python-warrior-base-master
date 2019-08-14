@@ -7,6 +7,7 @@ class Map(BaseClassForNameAndImage):
     """
     This interface contains all data needed by the client about the game map
     """
+
     def __init__(self, name, image, number_of_case, cases=None):
         """
         Args:
@@ -40,33 +41,57 @@ class Map(BaseClassForNameAndImage):
         for dragon in dragons:
             cases[dragon] = Hero('monster', 'Dragon', 'imageUrl', life=15, attack_level=4)
         for arc in arcs:
-            cases[arc] = Modifier(mod_type='weapon', name='Arc', mod_attack_level=1)
+            cases[arc] = Modifier(current_type='weapon', name='un Arc', mod_attack_level=1)
         for massue in massues:
-            cases[massue] = Modifier(mod_type='weapon', name='Massue', mod_attack_level=3)
+            cases[massue] = Modifier(current_type='weapon', name='une Massue', mod_attack_level=3)
         for epee in epees:
-            cases[epee] = Modifier(mod_type='weapon', name='Epée', mod_attack_level=5)
+            cases[epee] = Modifier(current_type='weapon', name='une Epée', mod_attack_level=5)
         for eclair in eclairs:
-            cases[eclair] = Modifier(mod_type='spell', name='Eclair', mod_attack_level=2)
+            cases[eclair] = Modifier(current_type='spell', name='un Eclair', mod_attack_level=2)
         for boule_de_feu in boules_de_feu:
-            cases[boule_de_feu] = Modifier(mod_type='spell', name='Boule de Feu', mod_attack_level=7)
+            cases[boule_de_feu] = Modifier(current_type='spell', name='une Boule de Feu', mod_attack_level=7)
         for potion_mineure in potions_mineures:
-            cases[potion_mineure] = Modifier(mod_type='potion', name='Potion Mineure', mod_life=1)
+            cases[potion_mineure] = Modifier(current_type='potion', name='une Potion Mineure', mod_life=1)
         for potion_standard in potions_standards:
-            cases[potion_standard] = Modifier(mod_type='potion', name='Potion Standard', mod_life=2)
+            cases[potion_standard] = Modifier(current_type='potion', name='une Potion Standard', mod_life=2)
         for potion_grande in potions_grandes:
-            cases[potion_grande] = Modifier(mod_type='potion', name='Grande Potion', mod_life=5)
+            cases[potion_grande] = Modifier(current_type='potion', name='une Grande Potion', mod_life=5)
         return [Map('Maxiland', 'imageURL', 64, cases),
                 Map('Miniland', 'imageURL', 16)]
+
+    def case_not_empty(self, case):
+        """
+        Returns
+            bool: True if case has special action
+        """
+        return case in self.cases
 
     def get_name_of_case_content(self, case):
         """
         Returns
             str: content_name of case
         """
-        if case in self.cases:
+        if self.case_not_empty(case):
             return self.cases[case].name
         else:
             return ' '
+
+    def get_type_of_case_content(self, case):
+        """
+        Returns
+            str: content_type of case
+        """
+        if self.case_not_empty(case):
+            return self.cases[case].current_type
+
+    # def get_mod_life_case_content(self, case):
+    #     """
+    #     Returns
+    #         int: mod_life of case
+    #     """
+    #     if case in self.cases:
+    #         if hasattr(self.cases[case], self.cases.mod_life):
+    #             return self.cases[case].mod_life
 
     def build_path_to_display(self, hero, start_position, final_position):
         """
@@ -74,6 +99,8 @@ class Map(BaseClassForNameAndImage):
             hero (Hero): the chosen hero for the game
             start_position: case index of hero before
             final_position: case index of hero after dice roll
+        Constant
+            PATH_LENGTH: size of segment of cases to display
         Returns
             path: Dictionary of cases starting with start_position and of length PATH_LENGTH
         """
