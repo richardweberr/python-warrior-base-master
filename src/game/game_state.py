@@ -89,7 +89,7 @@ class GameState(object):
         else:
             # GAME CONTINUES
             self.nextTurn = True
-            self.log.append(f'Vous arrivez sur la case {self.current_case}')
+            # self.log.append(f'Vous arrivez sur la case {self.current_case}')
             self.log.append(
                 ' | '.join(map(str, self.game_map.build_path_to_display(self.hero, start_position, self.current_case))))
             # HERO INTERACTS WITH CASE CONTENT
@@ -97,18 +97,32 @@ class GameState(object):
                 # CASE CONTENT IS (POTION, WEAPON OR SPELL() OF MODIFIER TYPE
                 if isinstance(self.game_map.cases[self.current_case], Modifier):
                     self.log.append(f'Vous tombez sur {self.game_map.get_name_of_case_content(self.current_case)}')
-                    self.log.append(f'Votre niveau de vie était {self.hero.life} et '
-                                    f'votre niveau d\'attaque était {self.hero.attack_level}')
-                    self.hero.use_modifier(self.game_map.cases[self.current_case])
-                    self.log.append(f'Votre niveau de vie est maintenant {self.hero.life} et '
-                                    f'votre niveau d\'attaque est maintenant {self.hero.attack_level}')
+                    # self.log.append(f'Votre niveau de vie était {self.hero.life} et '
+                    #                 f'votre niveau d\'attaque était {self.hero.attack_level}')
+                    if self.hero.can_use_modifier(self.game_map.cases[self.current_case]):
+                        self.hero.use_modifier(self.game_map.cases[self.current_case])
+                        self.log.append(f'Votre niveau de vie est maintenant {self.hero.life} et '
+                                        f'votre niveau d\'attaque est maintenant {self.hero.attack_level}')
+                    else:
+                        self.log.append(f'Vous ne savez pas utiliser {self.game_map.cases[self.current_case].name}')
                 # CASE CONTENT IS (MONSTER) OF HERO TYPE
                 if isinstance(self.game_map.cases[self.current_case], Hero):
                     self.log.append(f'Vous tombez sur un {self.game_map.get_name_of_case_content(self.current_case)} '
-                                    f'({self.game_map.cases[self.current_case].life} points de vie, '
+                                    f'(vie {self.game_map.cases[self.current_case].life}, '
                                     f'attaque {self.game_map.cases[self.current_case].attack_level}), '
-                                    f'le combat commence')
-                    self.log.append(f'Vous aviez {self.hero.life} points de vie')
+                                    f'le combat commence...')
                     self.hero.combat_monster(self.game_map.cases[self.current_case])
+                    if self.game_map.cases[self.current_case].life == 0:
+                        self.log.append(f'Vous avez tué un {self.game_map.cases[self.current_case].name}')
+                    else:
+                        self.log.append(f'Il reste {self.game_map.cases[self.current_case].life} '
+                                        f'points de vie à votre adversaire. Il vous attaque!')
+                        if self.hero.life == 0:
+                            self.log.append(f'Vous mourrez')
+                            print(self.get_last_log())
+                            self.game_status = GAME_STATUS[1]
+                            self.nextTurn = False
+                        else:
+                            self.log.append(f'Il vous reste {self.hero.life} points de vie, votre adversaire s\'enfuit')
 
         return self.nextTurn

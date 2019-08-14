@@ -8,7 +8,7 @@ class Map(BaseClassForNameAndImage):
     This interface contains all data needed by the client about the game map
     """
 
-    def __init__(self, name, image, number_of_case, cases=None):
+    def __init__(self, name, number_of_case, image=None, cases=None):
         """
         Args:
             name: name of the map
@@ -35,11 +35,11 @@ class Map(BaseClassForNameAndImage):
 
         cases = {}
         for goblin in goblins:
-            cases[goblin] = Hero('monster', 'Goblin', 'imageUrl', life=6, attack_level=1)
+            cases[goblin] = Hero(current_type='monster', name='Goblin', image='imageUrl', life=6, attack_level=1)
         for sorcier in sorciers:
-            cases[sorcier] = Hero('monster', 'Sorcier', 'imageUrl', life=9, attack_level=2)
+            cases[sorcier] = Hero(current_type='monster', name='Sorcier', image='imageUrl', life=9, attack_level=2)
         for dragon in dragons:
-            cases[dragon] = Hero('monster', 'Dragon', 'imageUrl', life=15, attack_level=4)
+            cases[dragon] = Hero(current_type='monster', name='Dragon', image='imageUrl', life=15, attack_level=4)
         for arc in arcs:
             cases[arc] = Modifier(current_type='weapon', name='un Arc', mod_attack_level=1)
         for massue in massues:
@@ -56,7 +56,7 @@ class Map(BaseClassForNameAndImage):
             cases[potion_standard] = Modifier(current_type='potion', name='une Potion Standard', mod_life=2)
         for potion_grande in potions_grandes:
             cases[potion_grande] = Modifier(current_type='potion', name='une Grande Potion', mod_life=5)
-        return [Map('Maxiland', 'imageURL', 64, cases),
+        return [Map(name='Maxiland', image='imageURL', number_of_case=64, cases=cases),
                 Map('Miniland', 'imageURL', 16)]
 
     def case_not_empty(self, case):
@@ -110,7 +110,7 @@ class Map(BaseClassForNameAndImage):
         for i in range(1, PATH_LENGTH):
             if start_position + i <= self.number_of_case:
                 if start_position + i == final_position:
-                    path.append(hero.name)
+                    path.append(f'{hero.name} ({hero.life}, {hero.attack_level})')
                 else:
                     path.append(
                         str(start_position + i) + ' ' + self.get_name_of_case_content(start_position + i))
