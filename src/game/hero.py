@@ -21,7 +21,6 @@ class Hero(BaseClassForNameAndImage):
         # self._life = life
         # now the constructor uses the setter conditions too
         self.life = life
-        # self._attack_level = attack_level
         self.attack_level = attack_level
 
     @classmethod
@@ -39,12 +38,16 @@ class Hero(BaseClassForNameAndImage):
     @life.setter
     def life(self, new_value):
         if self.current_type == 'Wizard':
-            if new_value >= self.WIZARD_MAX_LIFE:
+            if new_value <= 0:
+                self._life = 0
+            elif new_value >= self.WIZARD_MAX_LIFE:
                 self._life = self.WIZARD_MAX_LIFE
             else:
                 self._life = new_value
         elif self.current_type == 'Warrior':
-            if new_value >= self.WARRIOR_MAX_LIFE:
+            if new_value < 0:
+                self._life = 0
+            elif new_value >= self.WARRIOR_MAX_LIFE:
                 self._life = self.WARRIOR_MAX_LIFE
             else:
                 self._life = new_value
