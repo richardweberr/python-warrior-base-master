@@ -17,6 +17,8 @@ class Map(BaseClassForNameAndImage):
         """
         super().__init__(name, image)
         self.number_of_case = number_of_case
+        if cases is None:
+            cases = {}
         self.cases = cases
 
     @classmethod
@@ -35,7 +37,10 @@ class Map(BaseClassForNameAndImage):
 
         cases = {}
         for goblin in goblins:
-            cases[goblin] = Hero(current_type='monster', name='Goblin', image='imageUrl', life=6, attack_level=1)
+            if goblin in cases:
+                raise Exception
+            else:
+                cases[goblin] = Hero(current_type='monster', name='Goblin', image='imageUrl', life=6, attack_level=1)
         for sorcier in sorciers:
             cases[sorcier] = Hero(current_type='monster', name='Sorcier', image='imageUrl', life=9, attack_level=2)
         for dragon in dragons:
@@ -62,7 +67,7 @@ class Map(BaseClassForNameAndImage):
     def case_not_empty(self, case):
         """
         Returns
-            bool: True if case has special action
+            bool: True if case has special action (modifier)
         """
         return case in self.cases
 
@@ -83,15 +88,6 @@ class Map(BaseClassForNameAndImage):
         """
         if self.case_not_empty(case):
             return self.cases[case].current_type
-
-    # def get_mod_life_case_content(self, case):
-    #     """
-    #     Returns
-    #         int: mod_life of case
-    #     """
-    #     if case in self.cases:
-    #         if hasattr(self.cases[case], self.cases.mod_life):
-    #             return self.cases[case].mod_life
 
     def build_path_to_display(self, hero, start_position, final_position):
         """

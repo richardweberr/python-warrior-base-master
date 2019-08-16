@@ -18,6 +18,7 @@ class GameState(object):
         self.nextTurn = True
         self.game_status = GAME_STATUS[0]
         self.game_id = 1
+        self.dice_roll = 0
 
     def get_player_name(self):
         """
@@ -67,6 +68,9 @@ class GameState(object):
     def init_log(self):
         self.log = []
 
+    def roll_dice(self):
+        return randrange(1, 7)
+
     def next_turn(self):
         """
         Called by the client to execute a new turn in the game.
@@ -77,9 +81,9 @@ class GameState(object):
         # EMPTY LOG EVERY TURN
         self.init_log()
         start_position = self.current_case
-        roll_dice = randrange(1, 7)
-        self.log.append(f'Vous êtes sur la case {start_position}, vous lancez un dé de {roll_dice}')
-        self.current_case += roll_dice
+        self.dice_roll = self.roll_dice()
+        self.log.append(f'Vous êtes sur la case {start_position}, vous lancez un dé de {self.dice_roll}')
+        self.current_case += self.dice_roll
         # TESTS WHETHER GAME IS WON
         if self.current_case > self.game_map.number_of_case:
             self.nextTurn = False
